@@ -14,8 +14,17 @@ public class SistemaProjetos {
     }
 
     public void cadastrarProjeto(Projeto projeto) {
-        this.projetos.add(projeto);
+    if (projeto == null) {
+        throw new IllegalArgumentException("Projeto não pode ser nulo.");
     }
+    
+    this.projetos.add(projeto);
+    
+    Professor orientador = projeto.getOrientador();
+    if (orientador != null) {
+        orientador.adicionarProjeto(projeto);
+    }
+}
 
     public void cadastrarUsuario(Usuario usuario) {
         if (usuario != null) {

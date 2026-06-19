@@ -52,8 +52,6 @@ public class Projeto {
         this.participantes = new ArrayList<>();
         this.ativo = true;
         this.relatorios = new ArrayList<>();
-        
-        orientador.adicionarProjeto(this);
     }
 
     public String getTitulo() { return titulo; }
