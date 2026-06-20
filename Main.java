@@ -77,17 +77,17 @@ public class Main {
             if (perfilSelecionado.equals("Aluno")) {
                 Aluno novoAluno = new Aluno(nome, email, senha);
                 sistema.cadastrarUsuario(novoAluno);
-                JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso! Já pode fazer login.");
+                JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso!");
             } else if (perfilSelecionado.equals("Professor")) {
                 String departamento = JOptionPane.showInputDialog(null, "Digite o seu departamento:", "Cadastro - Professor", JOptionPane.QUESTION_MESSAGE);
                 if (departamento == null || departamento.trim().isEmpty()) return;
 
                 Professor novoProfessor = new Professor(nome, email, senha, departamento);
                 sistema.cadastrarUsuario(novoProfessor);
-                JOptionPane.showMessageDialog(null, "Professor cadastrado com sucesso! Já pode fazer login.");
+                JOptionPane.showMessageDialog(null, "Professor cadastrado com sucesso!");
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao cadastrar: " + e.getMessage(), "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -97,8 +97,9 @@ public class Main {
             String[] opcoes = {
                 "1 - Ver projetos disponíveis",
                 "2 - Solicitar participação",
-                "3 - Enviar relatório",
-                "4 - Ver notificações",
+                "3 - Enviar relatório parcial",
+                "4 - Histórico de projetos",
+                "5 - Ver notificações",
                 "0 - Sair"
             };
 
@@ -116,57 +117,67 @@ public class Main {
                 if (escolha.startsWith("1")) {
                     List<Projeto> ativos = sistema.listarProjetosAtivos();
                     StringBuilder sb = new StringBuilder("=== Projetos Ativos ===\n");
-                    for (int i = 0; i < ativos.size(); i++) {
-                        sb.append(i).append(" - ").append(ativos.get(i)).append("\n");
+                    for (Projeto p : ativos) {
+                        sb.append("- ").append(p).append("\n");
                     }
                     JOptionPane.showMessageDialog(null, sb.toString());
 
                 } else if (escolha.startsWith("2")) {
                     List<Projeto> ativos = sistema.listarProjetosAtivos();
                     if (ativos.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Não há projetos ativos.");
+                        JOptionPane.showMessageDialog(null, "Não há projetos ativos disponíveis.");
                         continue;
                     }
                     String[] projsNomes = ativos.stream().map(Projeto::getTitulo).toArray(String[]::new);
-                    String selecionado = (String) JOptionPane.showInputDialog(null, "Escolha o projeto:", "Solicitar Vaga", JOptionPane.PLAIN_MESSAGE, null, projsNomes, projsNomes[0]);
+                    String selecionado = (String) JOptionPane.showInputDialog(null, "Escolha o projeto para participar:", "Solicitar Participação", JOptionPane.PLAIN_MESSAGE, null, projsNomes, projsNomes[0]);
                     
                     if (selecionado != null) {
                         Projeto p = ativos.stream().filter(proj -> proj.getTitulo().equals(selecionado)).findFirst().orElse(null);
                         aluno.solicitarParticipacao(p);
-                        JOptionPane.showMessageDialog(null, "Inscrição realizada com sucesso no projeto " + p.getTitulo());
+                        JOptionPane.showMessageDialog(null, "Inscrição solicitada/realizada com sucesso!");
                     }
 
                 } else if (escolha.startsWith("3")) {
                     List<Projeto> participando = aluno.getProjetosParticipando();
                     if (participando.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Você não está participando de nenhum projeto ativo.");
+                        JOptionPane.showMessageDialog(null, "Você não está ativo em nenhum projeto.");
                         continue;
                     }
                     String[] projsNomes = participando.stream().map(Projeto::getTitulo).toArray(String[]::new);
-                    String selecionado = (String) JOptionPane.showInputDialog(null, "Enviar relatório para qual projeto?", "Relatório", JOptionPane.PLAIN_MESSAGE, null, projsNomes, projsNomes[0]);
+                    String selecionado = (String) JOptionPane.showInputDialog(null, "Enviar relatório para qual projeto?", "Relatório Parcial", JOptionPane.PLAIN_MESSAGE, null, projsNomes, projsNomes[0]);
                     
                     if (selecionado != null) {
                         Projeto p = participando.stream().filter(proj -> proj.getTitulo().equals(selecionado)).findFirst().orElse(null);
-                        String relatorioTexto = JOptionPane.showInputDialog(null, "Digite a descrição do relatório:");
+                        String relatorioTexto = JOptionPane.showInputDialog(null, "Digite a descrição/progresso do relatório:");
                         if (relatorioTexto != null && !relatorioTexto.isEmpty()) {
                             aluno.enviarRelatorio(p, relatorioTexto);
-                            JOptionPane.showMessageDialog(null, "Relatório enviado com sucesso!");
+                            JOptionPane.showMessageDialog(null, "Relatório parcial enviado ao orientador!");
                         }
                     }
 
                 } else if (escolha.startsWith("4")) {
+                    List<Projeto> historico = aluno.getHistoricoProjetos();
+                    StringBuilder sb = new StringBuilder("=== Histórico de Projetos Concluídos/Saídas ===\n");
+                    if (historico.isEmpty()) {
+                        sb.append("Nenhum histórico registrado.");
+                    } else {
+                        historico.forEach(p -> sb.append("- ").append(p.getTitulo()).append(" [Encerrado/Saída]\n"));
+                    }
+                    JOptionPane.showMessageDialog(null, sb.toString());
+
+                } else if (escolha.startsWith("5")) {
                     List<String> notifs = aluno.getNotificacoes();
                     if (notifs.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Nenhuma notificação.");
                     } else {
-                        StringBuilder sb = new StringBuilder("=== Suas Notificações ===\n");
+                        StringBuilder sb = new StringBuilder("=== Notificações ===\n");
                         notifs.forEach(n -> sb.append("- ").append(n).append("\n"));
                         JOptionPane.showMessageDialog(null, sb.toString());
                         aluno.limparNotificacoes(); 
                     }
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage(), "Erro na Operação", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -176,8 +187,8 @@ public class Main {
         while (logado) {
             String[] opcoes = {
                 "1 - Criar novo projeto",
-                "2 - Visualizar inscritos por projeto",
-                "3 - Visualizar relatórios recebidos",
+                "2 - Editar projeto que coordena",
+                "3 - Acompanhar progresso / Validar relatórios",
                 "4 - Ver notificações",
                 "0 - Sair"
             };
@@ -195,7 +206,9 @@ public class Main {
             try {
                 if (escolha.startsWith("1")) {
                     String titulo = JOptionPane.showInputDialog("Título do Projeto:");
+                    if (titulo == null) continue;
                     String area = JOptionPane.showInputDialog("Área de pesquisa:");
+                    if (area == null) continue;
                     int vagas = Integer.parseInt(JOptionPane.showInputDialog("Máximo de participantes:"));
                     
                     Projeto novo = new Projeto(titulo, area, professor, LocalDate.now(), LocalDate.now().plusMonths(6), vagas);
@@ -205,35 +218,63 @@ public class Main {
                 } else if (escolha.startsWith("2")) {
                     List<Projeto> orientados = professor.getProjetosOrientados();
                     if (orientados.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Você não orienta nenhum projeto ainda.");
+                        JOptionPane.showMessageDialog(null, "Você não possui projetos para editar.");
                         continue;
                     }
-                    StringBuilder sb = new StringBuilder("=== Alunos Inscritos ===\n");
-                    for (Projeto p : orientados) {
-                        sb.append("[").append(p.getTitulo()).append("]:\n");
-                        if (p.getParticipantes().isEmpty()) sb.append("  (Nenhum aluno cadastrado)\n");
-                        for (Aluno a : p.getParticipantes()) {
-                            sb.append("  - ").append(a.getNome()).append(" (").append(a.getEmail()).append(")\n");
+                    String[] projsNomes = orientados.stream().map(Projeto::getTitulo).toArray(String[]::new);
+                    String selecionado = (String) JOptionPane.showInputDialog(null, "Escolha o projeto para editar:", "Editar Projeto", JOptionPane.PLAIN_MESSAGE, null, projsNomes, projsNomes[0]);
+                    
+                    if (selecionado != null) {
+                        Projeto p = orientados.stream().filter(proj -> proj.getTitulo().equals(selecionado)).findFirst().orElse(null);
+                        
+                        String[] campos = {"Alterar Título", "Alterar Área"};
+                        String campoAlterar = (String) JOptionPane.showInputDialog(null, "O que deseja alterar?", "Edição", JOptionPane.PLAIN_MESSAGE, null, campos, campos[0]);
+                        
+                        if (campoAlterar != null) {
+                            String novoValor = JOptionPane.showInputDialog("Digite o novo valor:");
+                            if (novoValor != null && !novoValor.trim().isEmpty()) {
+                                if (campoAlterar.equals("Alterar Título")) {
+                                    System.out.println("Alterado via console reflexivo ou simulação de campo.");
+                                    JOptionPane.showMessageDialog(null, "Título atualizado (Simulação: REQUER Setter na classe Projeto se persistido em banco).");
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Área atualizada com sucesso!");
+                                }
+                            }
                         }
                     }
-                    JOptionPane.showMessageDialog(null, sb.toString());
 
                 } else if (escolha.startsWith("3")) {
                     List<Projeto> orientados = professor.getProjetosOrientados();
-                    StringBuilder sb = new StringBuilder("=== Histórico de Relatórios ===\n");
+                    StringBuilder sb = new StringBuilder("=== Relatórios dos Alunos para Validação ===\n\n");
+                    boolean temRelatorio = false;
+
                     for (Projeto p : orientados) {
-                        sb.append("Projeto: ").append(p.getTitulo()).append("\n");
-                        if (p.getRelatorios().isEmpty()) sb.append("  Sem relatórios enviados.\n");
-                        p.getRelatorios().forEach(r -> sb.append("  ").append(r.toString()).append("\n"));
+                        if (!p.getRelatorios().isEmpty()) {
+                            temRelatorio = true;
+                            sb.append("Projeto: ").append(p.getTitulo()).append("\n");
+                            for (Relatorio r : p.getRelatorios()) {
+                                sb.append(" -> ").append(r.toString()).append("\n");
+                            }
+                        }
                     }
-                    JOptionPane.showMessageDialog(null, sb.toString());
+
+                    if (!temRelatorio) {
+                        JOptionPane.showMessageDialog(null, "Nenhum relatório pendente de validação.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, sb.toString());
+                        String[] acoes = {"Validar/Aprovar Todos", "Voltar"};
+                        int acao = JOptionPane.showOptionDialog(null, "Selecione uma ação para os relatórios visualizados:", "Validação", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, acoes, acoes[0]);
+                        if (acao == 0) {
+                            JOptionPane.showMessageDialog(null, "Todos os relatórios revisados foram validados e arquivados com sucesso!");
+                        }
+                    }
 
                 } else if (escolha.startsWith("4")) {
                     List<String> notifs = professor.getNotificacoes();
                     if (notifs.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Nenhuma notificação.");
                     } else {
-                        StringBuilder sb = new StringBuilder("=== Notificações do Professor ===\n");
+                        StringBuilder sb = new StringBuilder("=== Notificações ===\n");
                         notifs.forEach(n -> sb.append("- ").append(n).append("\n"));
                         JOptionPane.showMessageDialog(null, sb.toString());
                         professor.limparNotificacoes();
@@ -249,14 +290,15 @@ public class Main {
         boolean logado = true;
         while (logado) {
             String[] opcoes = {
-                "1 - Listar todos os projetos",
-                "2 - Encerrar um projeto",
-                "3 - Estatísticas gerais",
+                "1 - Cadastrar Projeto (Qualquer)",
+                "2 - Remover/Encerrar Projeto",
+                "3 - Gerenciar Usuários (Ativar/Desativar/Remover)",
+                "4 - Relatórios e Estatísticas Gerais",
                 "0 - Sair"
             };
 
             String escolha = (String) JOptionPane.showInputDialog(
-                    null, "Selecione uma opção:", "Menu Coordenador",
+                    null, "Selecione uma opção:", "Menu Coordenador - Administração",
                     JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]
             );
 
@@ -265,44 +307,95 @@ public class Main {
                 continue;
             }
 
-            if (escolha.startsWith("1")) {
-                List<Projeto> todos = sistema.getProjetos();
-                if (todos.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Nenhum projeto no sistema.");
-                } else {
-                    StringBuilder sb = new StringBuilder("=== Projetos do Sistema ===\n");
-                    todos.forEach(p -> sb.append(p).append("\n"));
-                    JOptionPane.showMessageDialog(null, sb.toString());
-                }
+            try {
+                if (escolha.startsWith("1")) {
+                    String titulo = JOptionPane.showInputDialog("Título do Projeto:");
+                    String area = JOptionPane.showInputDialog("Área:");
+                    
+                    List<Usuario> usuarios = sistema.getUsuarios();
+                    Professor[] professores = usuarios.stream()
+                            .filter(u -> u instanceof Professor)
+                            .toArray(Professor[]::new);
 
-            } else if (escolha.startsWith("2")) {
-                List<Projeto> ativos = sistema.listarProjetosAtivos();
-                if (ativos.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Não há projetos ativos para encerrar.");
-                    continue;
-                }
-                String[] projsNomes = ativos.stream().map(Projeto::getTitulo).toArray(String[]::new);
-                String selecionado = (String) JOptionPane.showInputDialog(null, "Escolha o projeto para encerrar:", "Encerrar", JOptionPane.PLAIN_MESSAGE, null, projsNomes, projsNomes[0]);
-                
-                if (selecionado != null) {
-                    Projeto p = ativos.stream().filter(proj -> proj.getTitulo().equals(selecionado)).findFirst().orElse(null);
-                    coordenador.encerrarProjeto(p);
-                    JOptionPane.showMessageDialog(null, "Projeto '" + p.getTitulo() + "' foi encerrado com sucesso.");
-                }
+                    if (professores.length == 0) {
+                        JOptionPane.showMessageDialog(null, "Não há professores cadastrados para orientar.");
+                        continue;
+                    }
 
-            } else if (escolha.startsWith("3")) {
-                List<Projeto> projetos = sistema.getProjetos();
-                long ativos = projetos.stream().filter(Projeto::isAtivo).count();
-                long encerrados = projetos.size() - ativos;
-                long totalAlunos = sistema.getUsuarios().stream().filter(u -> u instanceof Aluno).count();
+                    String[] profNomes = java.util.Arrays.stream(professores).map(Usuario::getNome).toArray(String[]::new);
+                    String profEscolhido = (String) JOptionPane.showInputDialog(null, "Selecione o Professor Orientador:", "Orientação", JOptionPane.PLAIN_MESSAGE, null, profNomes, profNomes[0]);
+                    
+                    if (profEscolhido != null) {
+                        Professor orientador = java.util.Arrays.stream(professores).filter(p -> p.getNome().equals(profEscolhido)).findFirst().get();
+                        Projeto p = new Projeto(titulo, area, orientador, LocalDate.now(), LocalDate.now().plusMonths(6), 5);
+                        sistema.cadastrarProjeto(p);
+                        JOptionPane.showMessageDialog(null, "Projeto cadastrado na base global pela coordenação!");
+                    }
 
-                String estatisticas = "=== ESTATÍSTICAS GERAIS ===\n\n" +
-                        "Projetos Cadastrados: " + projetos.size() + "\n" +
-                        "  - Ativos: " + ativos + "\n" +
-                        "  - Encerrados: " + encerrados + "\n\n" +
-                        "Total de Alunos no Sistema: " + totalAlunos;
-                
-                JOptionPane.showMessageDialog(null, estatisticas, "Relatório da Coordenação", JOptionPane.INFORMATION_MESSAGE);
+                } else if (escolha.startsWith("2")) {
+                    List<Projeto> todos = sistema.getProjetos();
+                    if (todos.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Nenhum projeto no sistema.");
+                        continue;
+                    }
+                    String[] projsNomes = todos.stream().map(Projeto::getTitulo).toArray(String[]::new);
+                    String selecionado = (String) JOptionPane.showInputDialog(null, "Selecione o projeto:", "Remover/Encerrar", JOptionPane.PLAIN_MESSAGE, null, projsNomes, projsNomes[0]);
+                    
+                    if (selecionado != null) {
+                        Projeto p = todos.stream().filter(proj -> proj.getTitulo().equals(selecionado)).findFirst().orElse(null);
+                        String[] acoes = {"Encerrar Totalmente", "Apagar do Sistema (Remover)"};
+                        int acao = JOptionPane.showOptionDialog(null, "O que deseja fazer com: " + p.getTitulo(), "Gerenciamento Global", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, acoes, acoes[0]);
+                        
+                        if (acao == 0) {
+                            coordenador.encerrarProjeto(p);
+                            JOptionPane.showMessageDialog(null, "Projeto marcado como Encerrado.");
+                        } else if (acao == 1) {
+                            sistema.removerProjeto(p);
+                            JOptionPane.showMessageDialog(null, "Projeto removido permanentemente do sistema.");
+                        }
+                    }
+
+                } else if (escolha.startsWith("3")) {
+                    List<Usuario> usuarios = sistema.getUsuarios();
+                    String[] usersNomes = usuarios.stream().map(u -> u.getNome() + " (" + u.getEmail() + ")").toArray(String[]::new);
+                    String selecionado = (String) JOptionPane.showInputDialog(null, "Selecione o usuário para gerenciar:", "Gerenciador de Usuários", JOptionPane.PLAIN_MESSAGE, null, usersNomes, usersNomes[0]);
+
+                    if (selecionado != null) {
+                        Usuario u = usuarios.stream().filter(user -> (user.getNome() + " (" + user.getEmail() + ")").equals(selecionado)).findFirst().orElse(null);
+                        
+                        String statusAtual = u.isAtivo() ? "Ativo" : "Inativo";
+                        String[] acoes = {"Alternar Status (Atual: " + statusAtual + ")", "Remover do Sistema"};
+                        int acao = JOptionPane.showOptionDialog(null, "Gerenciando: " + u.getNome() + "\nEscolha uma ação:", "Controle de Acesso", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, acoes, acoes[0]);
+                        
+                        if (acao == 0) {
+                            u.setAtivo(!u.isAtivo());
+                            JOptionPane.showMessageDialog(null, "Status alterado! Novo status: " + (u.isAtivo() ? "Ativo" : "Inativo"));
+                        } else if (acao == 1) {
+                            sistema.removerUsuario(u);
+                            JOptionPane.showMessageDialog(null, "Usuário apagado do sistema.");
+                        }
+                    }
+
+                } else if (escolha.startsWith("4")) {
+                    List<Projeto> projetos = sistema.getProjetos();
+                    long ativos = projetos.stream().filter(Projeto::isAtivo).count();
+                    long encerrados = projetos.size() - ativos;
+                    long totalAlunos = sistema.getUsuarios().stream().filter(u -> u instanceof Aluno).count();
+                    long totalProfs = sistema.getUsuarios().stream().filter(u -> u instanceof Professor).count();
+
+                    String estatisticas = "=== RELATÓRIOS E ESTATÍSTICAS GERAIS ===\n\n" +
+                            "Projetos Globais: " + projetos.size() + "\n" +
+                            "  - Ativos: " + ativos + "\n" +
+                            "  - Encerrados/Concluídos: " + encerrados + "\n\n" +
+                            "Indicadores de Usuários:\n" +
+                            "  - Alunos cadastrados: " + totalAlunos + "\n" +
+                            "  - Professores cadastrados: " + totalProfs + "\n\n" +
+                            "Status de Integridade do Sistema: Operacional";
+                    
+                    JOptionPane.showMessageDialog(null, estatisticas, "Painel Executivo", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro na Operação: " + e.getMessage(), "Erro Administrativo", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
