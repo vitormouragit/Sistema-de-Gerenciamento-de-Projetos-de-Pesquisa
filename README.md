@@ -1,123 +1,120 @@
-📚 Sistema de Gerenciamento de Projetos de Pesquisa Universitários
+##
+Sistema de Gerenciamento de Projetos de Pesquisa
 
-Sistema desenvolvido em Java com o objetivo de auxiliar no gerenciamento e organização de projetos de pesquisa universitários.
+Sistema desenvolvido em Java para gerenciamento de projetos de pesquisa universitários. O projeto foi desenvolvido com o objetivo de aplicar conceitos de Programação Orientada a Objetos e boas práticas de organização de código.
+##
+Sobre o projeto
 
-O projeto foi desenvolvido como atividade acadêmica para aplicar conceitos de Programação Orientada a Objetos (POO), organização de código e desenvolvimento de aplicações utilizando Java.
+O sistema representa um ambiente de gerenciamento de projetos de pesquisa, permitindo trabalhar com diferentes entidades relacionadas à criação, organização e acompanhamento dos projetos.
 
----
-
-🎯 Objetivo
-
-O sistema tem como proposta representar, por meio de uma aplicação, os principais elementos envolvidos no gerenciamento de projetos de pesquisa universitários.
-
-A aplicação busca proporcionar uma estrutura organizada para trabalhar com entidades relacionadas aos projetos, seus participantes e demais informações necessárias para o gerenciamento.
-
----
-
-🛠️ Tecnologias utilizadas
+O desenvolvimento foi realizado como parte das atividades acadêmicas do curso de Sistemas de Informação, utilizando Java como linguagem principal.
+##
+Tecnologias
 
 - Java
-- Programação Orientada a Objetos (POO)
+- Programação Orientada a Objetos
 - Git
 - GitHub
+##
+Conceitos utilizados
 
----
-
-📖 Conceitos aplicados
-
-Durante o desenvolvimento foram utilizados diversos conceitos fundamentais de Programação Orientada a Objetos, incluindo:
-
+Durante o desenvolvimento foram aplicados conceitos fundamentais de Programação Orientada a Objetos, entre eles:
+##
 - Classes e objetos
 - Encapsulamento
 - Herança
 - Polimorfismo
 - Interfaces
-- Organização em pacotes
-- Tratamento de exceções
 - Métodos e atributos
-- Estruturação modular do código
-
----
-
-📂 Estrutura do projeto
+- Tratamento de exceções
+- Organização em pacotes
+- Relacionamento entre classes
+##
+Estrutura do projeto
 
 Sistema-de-Gerenciamento-de-Projetos-de-Pesquisa/
 │
 ├── entidades/
-│   └── Classes responsáveis pela representação das entidades do sistema
+│   └── Classes que representam as entidades do sistema
 │
 ├── interfaces/
-│   └── Interfaces utilizadas pela aplicação
+│   └── Interfaces utilizadas pelo sistema
 │
 ├── excecao/
-│   └── Classes relacionadas ao tratamento de exceções
+│   └── Classes utilizadas para tratamento de exceções
 │
 ├── Main.java
-│   └── Classe principal para execução da aplicação
+│   └── Classe principal da aplicação
 │
 └── README.md
+##
+Execução
 
----
+Pré-requisitos
 
-▶️ Como executar
+Para executar o projeto, é necessário ter o Java Development Kit (JDK) instalado.
 
-1. Clone o repositório
+Verifique a instalação executando:
+
+java -version
+
+Clonando o repositório
 
 git clone https://github.com/vitormouragit/Sistema-de-Gerenciamento-de-Projetos-de-Pesquisa.git
 
-2. Acesse a pasta do projeto
+Entre no diretório do projeto:
 
 cd Sistema-de-Gerenciamento-de-Projetos-de-Pesquisa
 
-3. Compile o projeto
+Executando o projeto
 
-javac Main.java
+O projeto pode ser executado utilizando uma IDE compatível com Java, como IntelliJ IDEA, Eclipse ou Visual Studio Code.
 
-«Dependendo da estrutura e configuração do ambiente Java, pode ser necessário compilar também os arquivos presentes nos diretórios do projeto.»
+A classe principal da aplicação é:
 
-4. Execute
+Main.java
 
-java Main
+Organização do código
 
----
+O projeto foi organizado em diferentes pacotes para separar as responsabilidades das classes.
 
-💡 Aprendizados
+entidades
 
-O desenvolvimento deste projeto contribuiu para o aprendizado e prática de conceitos importantes no desenvolvimento de software, principalmente relacionados à Programação Orientada a Objetos em Java.
+Contém as classes responsáveis por representar os principais objetos utilizados pelo sistema.
 
-Entre os principais aprendizados estão:
+interfaces
 
-- Estruturar um projeto Java de forma organizada;
-- Criar e utilizar classes e objetos;
-- Trabalhar com relacionamentos entre classes;
-- Utilizar interfaces;
-- Aplicar conceitos de herança e polimorfismo;
-- Organizar exceções;
-- Utilizar Git e GitHub para versionamento do projeto.
+Contém as interfaces utilizadas para definir comportamentos que podem ser implementados pelas classes do sistema.
 
----
+excecao
 
-🚧 Status do projeto
+Contém as classes relacionadas ao tratamento de exceções específicas da aplicação.
 
-🟡 Em desenvolvimento / Projeto acadêmico
+Main
 
-O projeto pode receber melhorias e novas funcionalidades conforme os conhecimentos adquiridos durante a graduação.
+Responsável pela inicialização e execução da aplicação.
 
----
+Objetivos acadêmicos
 
-👨‍💻 Autor
+O desenvolvimento deste projeto teve como principais objetivos:
+
+- Praticar Programação Orientada a Objetos utilizando Java;
+- Compreender o relacionamento entre diferentes classes;
+- Aplicar encapsulamento, herança e polimorfismo;
+- Trabalhar com interfaces;
+- Praticar tratamento de exceções;
+- Desenvolver uma aplicação estruturada em diferentes pacotes;
+- Utilizar Git e GitHub para controle de versão.
+
+Status
+
+Projeto acadêmico desenvolvido para fins de aprendizado e prática de desenvolvimento de software.
+
+Autor
 
 João Vitor Bezerra Moura
 
-Estudante de Sistemas de Informação — UFC
+Estudante de Sistemas de Informação na Universidade Federal do Ceará (UFC).
 
-🔗 Contatos
-
-- GitHub: "@vitormouragit" (https://github.com/vitormouragit)
-- LinkedIn: "João Vitor Bezerra Moura" (https://www.linkedin.com/in/joão-vitor-bezerra-moura-38b406432/)
-
----
-
-📄 Licença
-
-Este projeto foi desenvolvido para fins acadêmicos e educacionais.
+- GitHub: https://github.com/vitormouragit
+- LinkedIn: https://www.linkedin.com/in/joao-vitor-bezerra-moura-38b406432/
